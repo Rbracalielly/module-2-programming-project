@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 2 Programming Project</title>
+<style>* { font-family: monospace; }</style>
+<script>
+
+// NOTE: You must implement the data structures using the prototype approach.
+//       This is not what the book uses, so you have to convert it.
+//       See also: https://it.pointpark.edu/tutorials/no-prototype-vs-prototype/
+
+// NOTE: Please review the following links regularly:
+//       https://it.pointpark.edu/tutorials/arrays-vs-objects/
+//       https://it.pointpark.edu/tutorials/no-prototype-vs-prototype/
+//       https://it.pointpark.edu/tutorials/implementation-vs-interface/
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. Implement the stack data structure using the prototype.
+function Stack(){
+  var items = [];
+  // properties and methods go here
+
+  //This adds a new item (or several items) to the top of the stack
+  this.push = function ( element ){
+    items.push(element);
+  };
+
+  //This removes the top item from the stack. It also returns the removed element
+  this.pop = function ( element ){
+    items.pop(element);
+  };
+
+  //This returns the top element from the stack.
+  //The stack is not modified (it does not remove the element; it only returns the element for information purposes)
+  this.peek = function ( element ){
+    return items[items.length-1];
+  };
+
+  //This returns true if the stack does not contain any elements, and false if the size of the stack is bigger than 0
+  this.isEmpty = function ( element ){
+    return items.length == 0;
+  };
+
+  //This returns the number of elements that the stack contains. It is similar to the length property of an array.
+  this.size = function ( element ){
+    return items.length;
+  };
+
+  //This removes all the elements of the stack.
+  this.clear = function ( element ){
+    items = [];
+  };
+
+  //This outputs the content of the stack on the console.
+  this.print = function(){
+    console.log(items.toString());
+  };
+
+}
+
+
+// 2. It is possible to use a stack to check if the number of parentheses in a
+//    string is balanced, meaning there are as many opening parentheses as
+//    closing ones. In addition, we can also make sure that each opening
+//    parenthesis precedes a closing parenthesis. Implement this algorithm.
+//    HINT: When encountering '(' push to the stack and when encountering ')'
+//    pop from the stack.
+
+function isBalanced(str) {
+    var parenthesisStack = new Stack();
+    var unbalanced = false;
+
+
+    //Loop through array elements
+    for (var i = 0; i<str.length; i++) {
+        // element at i is ( push ( to stack
+        if (str[i] === '(') {
+          parenthesisStack.push (str[i]);
+        }
+        // element at i is ) and the stack size is less than 1 push a ( into stack
+        //I did this for strings like ()))))))) where we have excess ),
+        //While not graceful it does work 
+        else if(str[i] === ')' && parenthesisStack.size() < 1){
+
+          parenthesisStack.push('(');
+
+        }
+        // // element at i is ) then pop
+        else if (str[i] === ')') {
+            parenthesisStack.pop ();
+        }
+      else {
+
+        break;
+
+      }
+
+    } //end of loop
+
+    if (parenthesisStack.size() > 0) {
+        console.log("String " + str + " has unbalanced parens");
+        unbalanced = false;
+    }
+
+    else{
+        console.log("String " + str + " has balanced parens");
+        unbalanced = true;
+    }
+    return unbalanced;
+}
+
+// 3. Write a simple test program that shows your implementation in the
+//    previous question works.
+
+var good = ("()");//balanced
+var badOpen = ("(((((()");//unbalanced
+var badClose = ("())))))))")//unbalanced
+var empty = ("");//unbalanced
+var good2 = ("(())()((()))");//balanced
+var bad2 = (")(");//unbalanced
+
+console.log("Testing a balanced example: ()");
+console.log(isBalanced(good));
+console.log("\nTesting a unbalanced openers example: (((((()");
+console.log(isBalanced(badOpen));
+console.log("\nTesting a unbalanced closers example: ())))))))");
+console.log(isBalanced(badClose));
+console.log("\nTesting an empty string:");
+console.log(isBalanced(empty));
+console.log("\nGood2 Test: (())()((()))");
+console.log(isBalanced(good2));
+console.log("\nBad2 Test: )(");
+console.log(isBalanced(bad2));
+
+
+
+
+
+// 4. Implement the queue data structure using the prototype.
+function Queue(){
+  // properties are initialized here
+  this.items = [];
+}
+
+Queue.prototype.enqueue = function (element){
+  this.items.push(element);
+}
+
+Queue.prototype.dequeue = function(){
+  return this.items.shift();
+}
+
+Queue.prototype.front = function(){
+  return this.items[0];
+}
+
+Queue.prototype.isEmpty = function(){
+  return this.items.length === 0;
+}
+
+Queue.prototype.size = function(){
+  return this.items.length;
+}
+
+Queue.prototype.print = function(){
+  console.log(this.items.toString());
+}
+
+
+
+
+// 5. Create a queue that stores edibles, that can be either fruits or
+//    vegetables. Use the constructor below to create the edible and store a
+//    few of each kind in the queue (at least 3 of each).
+
+function Edible(name, isFruit) {
+  this.name = name;
+  this.isFruit = isFruit; // if not fruit, it must be a vegetable
+  this.toString = function() {
+    return this.name;
+  };
+}
+
+// ... put your code here ...
+
+var edibleQueue = new Queue()
+
+//Fill edible queue
+edibleQueue.enqueue(new Edible("Cabbage", false));
+edibleQueue.enqueue(new Edible("Banana", true));
+edibleQueue.enqueue(new Edible("Apple", true));
+edibleQueue.enqueue(new Edible("Carrot", false));
+edibleQueue.enqueue(new Edible("Strawberry", true));
+edibleQueue.enqueue(new Edible("Brocoli", false));
+console.log("\nThe Edible queue elements are: ")
+edibleQueue.print();
+
+// 6. Create two more queues: one for fruits and one for vegetables. For this
+//    question, only create them (and leave them empty).
+
+var queueFruit = new Queue();
+var queueVegtable = new Queue()
+
+console.log("")
+
+var tmpSize = edibleQueue.size();
+
+//Can change to while loop and remove tmp var
+
+// 7. Dequeue all the elements from the edible queue and enqueue them in the
+
+for(var i = 0; i < tmpSize; i++){
+  var edible = edibleQueue.dequeue();
+  console.log("Removed " + edible);
+
+  if(edible.isFruit === true){
+    queueFruit.enqueue(edible);
+  }
+  else{
+    queueVegtable.enqueue(edible);
+  }
+}
+
+// 8. Print the final contents to the console, showing that your code works.
+  console.log("The Fruit Queue Contains:");
+  queueFruit.print();
+  console.log("The Vegtable Queue Contains:");
+  queueVegtable.print();
+
+
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>
